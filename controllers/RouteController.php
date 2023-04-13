@@ -1,23 +1,29 @@
 <?php
 
-const ROOT = "/php-demo";
-$route = str_replace(ROOT, "", $_SERVER['REQUEST_URI']);
+include_once("controllers/ProductController.php");
 
-switch ($route) {
-  case '/':
-  case '/home':
-    include_once("views/home.php");
-    break;
+class RouteController {
 
-  case '/productos':
-    include_once("views/producto.php");
-    break;
+  public function resolveURL($url) {
+    $route = str_replace(URL_ROOT, "", $url);
 
-  case '/api/productos':
-    include_once("controllers/ProductController.php");
-    break;
+    switch ($route) {
+      case '/':
+      case '/home':
+        include_once("views/home.php");
+        break;
 
-  default:
-    include_once("views/404.php");
-    break;
+      case '/productos':
+        include_once("views/producto.php");
+        break;
+
+      case '/api/productos':
+        (new ProductController())->resolveApiCall($_SERVER['REQUEST_METHOD']);
+        break;
+
+      default:
+        include_once("views/404.php");
+        break;
+    }
+  }
 }
